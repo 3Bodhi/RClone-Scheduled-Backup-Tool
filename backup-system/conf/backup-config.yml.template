@@ -1,0 +1,48 @@
+# Network Share Configuration
+NETWORK_SHARE_URL: "smb://server/share"
+NETWORK_SHARE_PATH: "/Volumes/BackupShare"
+NETWORK_SHARE_USERNAME: "username"
+NETWORK_SHARE_PASSWORD: "password"
+
+# Backup Configuration
+BACKUP_ROOT: "dropbox-backups"
+    # The name of the root folder of the backups at the destination.
+RCLONE_CONFIG: "../conf/rclone.conf"
+RCLONE_OPTIONS: "--progress --transfers 4 --checkers 8 --stats 1s"
+
+# Backup Sources Configuration
+# Each source has:
+#  - name: Unique identifier for the backup source
+#  - remote: The rclone remote name (e.g., "dropbox:")
+#  - path: The path within the remote (empty for root)
+#  - shared: If the folders is a Dropbox Shared folder.
+#  - includes: List of specific folders/files to include (empty for everything)
+#  - excludes: List of patterns to exclude
+#  - frequency: When to back up this source (monthly, quarterly, both)
+BACKUP_SOURCES:
+  - name: "documents"
+    remote: "dropbox:"
+    path: "Documents"
+    shared: false
+    includes: []
+    excludes: ["*.tmp", "temp/*"]
+    frequency: "both"
+
+  - name: "photos"
+    remote: "dropbox:"
+    path: "Photos"
+    shared: false
+    includes: ["2023/*", "2024/*"]
+    excludes: ["**/raw/*"]
+    frequency: "quarterly"
+
+  - name: "projects"
+    remote: "dropbox:"
+    path: "Projects"
+    shared: true
+    includes: ["ActiveProjects/*", "references.txt"]
+    excludes: ["**/*.log"]
+    frequency: "monthly"
+
+# System Configuration
+DEBUG: 0

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.user.backup.quarterly</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/bash</string>
+        <string>-c</string>
+        <string>/Users/myodhes/Projects/rclone_scheduled_backup/backup-system/bin/backup-runner.sh --type quarterly</string>
+    </array>
+    <key>StartCalendarInterval</key>
+    <array>
+        <dict>
+            <key>Month</key>
+            <integer>1</integer>
+            <key>Day</key>
+            <integer>1</integer>
+            <key>Hour</key>
+            <integer>3</integer>
+            <key>Minute</key>
+            <integer>0</integer>
+        </dict>
+        <dict>
+            <key>Month</key>
+            <integer>4</integer>
+            <key>Day</key>
+            <integer>1</integer>
+            <key>Hour</key>
+            <integer>3</integer>
+            <key>Minute</key>
+            <integer>0</integer>
+        </dict>
+        <dict>
+            <key>Month</key>
+            <integer>7</integer>
+            <key>Day</key>
+            <integer>1</integer>
+            <key>Hour</key>
+            <integer>3</integer>
+            <key>Minute</key>
+            <integer>0</integer>
+        </dict>
+        <dict>
+            <key>Month</key>
+            <integer>10</integer>
+            <key>Day</key>
+            <integer>1</integer>
+            <key>Hour</key>
+            <integer>3</integer>
+            <key>Minute</key>
+            <integer>0</integer>
+        </dict>
+    </array>
+    <key>StandardErrorPath</key>
+    <string>/Users/myodhes/Projects/rclone_scheduled_backup/backup-system/logs/quarterly-launchd-error.log</string>
+    <key>StandardOutPath</key>
+    <string>/Users/myodhes/Projects/rclone_scheduled_backup/backup-system/logs/quarterly-launchd-output.log</string>
+    <key>RunAtLoad</key>
+    <false/>
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+    </dict>
+</dict>
+</plist>

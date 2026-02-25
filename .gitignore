@@ -1,0 +1,105 @@
+# template files are allowed
+!*.template
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Runtime data and backup files
+*.pid
+*.seed
+*.pid.lock
+*.bak
+*.swp
+*~
+
+# Directory for temporary files
+tmp/
+temp/
+
+# Configuration with sensitive data
+conf/backup-config.yml
+conf/rclone.conf
+**/credentials.json
+**/*.key
+**/*.pem
+**/*.p12
+**/.env
+**/.env.*
+**/.env-*
+*_token
+*_password
+*_secret
+**/auth.*
+
+# OS specific files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+.directory
+.fuse_hidden*
+
+# Editor directories and files
+.idea/
+.vscode/
+*.sublime-workspace
+*.sublime-project
+.project
+.classpath
+.settings/
+.atom/
+.nvmrc
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Network Share temporary files
+.smbdelete*
+.nfs*
+
+# Shell script temporary files
+*.sh~
+*.bash~
+*.zsh~
+
+# Executables
+*.exe
+*.out
+*.app
+
+# Package files
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# Binary files that might be accidentally added
+*.bin
+*.dat
+*.dump
+
+# Temporary mount points
+/Volumes/*
+/mnt/*
+
+# Backup results and cache
+backup-system/cache/
+backup-system/results/
+
+# Allow LaunchD templates but ignore user-specific versions
+!conf/launchd/*.plist.template
+conf/launchd/*.plist
