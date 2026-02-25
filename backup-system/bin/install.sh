@@ -2,6 +2,9 @@
 # One-time installation and setup script.
 # Sets up config, configures the rclone SMB remote, installs LaunchD jobs.
 # Safe to re-run: existing config and remotes are preserved.
+#
+# Usage: install.sh [--no-launchd]
+#   --no-launchd   Skip LaunchD job installation (useful for manual/server setups)
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 CONF_DIR="${SCRIPT_DIR}/conf"
@@ -9,9 +12,23 @@ LAUNCHD_TEMPLATE_DIR="${CONF_DIR}/launchd"
 USER_LAUNCHD_DIR="${HOME}/Library/LaunchAgents"
 RCLONE_CONF="${CONF_DIR}/rclone.conf"
 BACKUP_CONF="${CONF_DIR}/backup-config.yml"
+SKIP_LAUNCHD=0
 
 say() { echo "==> $*"; }
 die() { echo "ERROR: $*" >&2; exit 1; }
+
+# Parse arguments
+for arg in "$@"; do
+    case "$arg" in
+        --no-launchd) SKIP_LAUNCHD=1 ;;
+        --help|-h)
+            echo "Usage: $0 [--no-launchd]"
+            echo "  --no-launchd   Skip LaunchD job installation"
+            exit 0
+            ;;
+        *) die "Unknown option: $arg" ;;
+    esac
+done
 
 # ---------------------------------------------------------------------------
 # Dependency checks
@@ -186,7 +203,11 @@ main() {
 
     chmod +x "${SCRIPT_DIR}/bin/backup-runner.sh"
 
-    install_launchd
+    if [[ "$SKIP_LAUNCHD" -eq 1 ]]; then
+        say "Skipping LaunchD installation (--no-launchd)."
+    else
+        install_launchd
+    fi
 
     echo ""
     echo "========================================"
