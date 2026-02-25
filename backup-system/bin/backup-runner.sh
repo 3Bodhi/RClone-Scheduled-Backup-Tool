@@ -3,6 +3,22 @@
 # Usage: backup-runner.sh [--type monthly|quarterly|both] [--force]
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+
+# ---------------------------------------------------------------------------
+# Dependency check — runs before sourcing any library so errors are clear
+# ---------------------------------------------------------------------------
+_check_dependencies() {
+    local missing=0
+    command -v rclone &>/dev/null || { echo "[missing] rclone — install: brew install rclone"; missing=1; }
+    command -v yq     &>/dev/null || { echo "[missing] yq     — install: brew install yq";     missing=1; }
+    command -v jq     &>/dev/null || { echo "[missing] jq     — install: brew install jq";     missing=1; }
+    if command -v yq &>/dev/null; then
+        yq --version 2>&1 | grep -q "version v[4-9]" \
+            || { echo "[wrong yq] mikefarah yq v4+ required — install: brew install yq"; missing=1; }
+    fi
+    [[ $missing -eq 1 ]] && { echo "Install missing dependencies and re-run."; exit 1; }
+}
+
 source "${SCRIPT_DIR}/lib/core.sh"
 
 print_usage() {
@@ -47,7 +63,8 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-# Default type
+_check_dependencies
+
 [[ -z "$backup_type" ]] && backup_type="both"
 
 if [[ ! "$backup_type" =~ ^(monthly|quarterly|both)$ ]]; then
