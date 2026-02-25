@@ -1,25 +1,24 @@
 #!/bin/bash
+# Backup runner — entry point for manual and scheduled backup runs.
+# Usage: backup-runner.sh [--type monthly|quarterly|both] [--force]
 
-# Determine script directory and source core library
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 source "${SCRIPT_DIR}/lib/core.sh"
-
-# Initialize the environment
-init_environment
-
-# Parse command line arguments
-backup_type=""
-force=0
 
 print_usage() {
     echo "Backup Runner v${VERSION}"
     echo "Usage: $0 [options]"
+    echo ""
     echo "Options:"
-    echo "  -t, --type TYPE    Backup type (monthly, quarterly, or both)"
-    echo "  -f, --force        Force backup even if one exists for current period"
+    echo "  -t, --type TYPE    Backup type: monthly, quarterly, or both (default: both)"
+    echo "  -f, --force        Force backup even if one already exists for the current period"
     echo "  -v, --version      Display version information"
     echo "  -h, --help         Display this help message"
 }
+
+# Parse arguments before init_environment so --help/--version work without a config file.
+backup_type=""
+force=0
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
@@ -32,6 +31,7 @@ while [[ $# -gt 0 ]]; do
             shift
             ;;
         -v|--version)
+            VERSION=$(cat "${SCRIPT_DIR}/VERSION" 2>/dev/null || echo "0.1.0")
             echo "Backup Runner v${VERSION}"
             exit 0
             ;;
@@ -47,40 +47,28 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-# Validate backup type
-if [ -z "$backup_type" ]; then
-    backup_type="both"
-elif [[ ! "$backup_type" =~ ^(monthly|quarterly|both)$ ]]; then
-    log_error "Invalid backup type: $backup_type. Must be monthly, quarterly, or both."
+# Default type
+[[ -z "$backup_type" ]] && backup_type="both"
+
+if [[ ! "$backup_type" =~ ^(monthly|quarterly|both)$ ]]; then
+    echo "Invalid backup type: $backup_type. Must be monthly, quarterly, or both."
     exit 1
 fi
 
-# Check and mount network share if needed
-if ! is_network_share_mounted; then
-    log_info "Network share not mounted, attempting to mount"
-    if ! mount_network_share; then
-        log_error "Failed to mount network share. Exiting."
-        notify_backup_completed "Backup" 1
-        exit 1
-    fi
-fi
+# Initialize environment: loads config, sets up logging, loads notification backends.
+init_environment
 
-# Perform backups based on type
+log_info "=== Backup run started (type: $backup_type, force: $force) ==="
+
 status=0
 
 if [[ "$backup_type" == "monthly" || "$backup_type" == "both" ]]; then
-    log_info "Running monthly backups"
-    run_backup "monthly" "$force"
-    monthly_status=$?
-    [ $monthly_status -ne 0 ] && status=1
+    run_backup "monthly" "$force" || status=1
 fi
 
 if [[ "$backup_type" == "quarterly" || "$backup_type" == "both" ]]; then
-    log_info "Running quarterly backups"
-    run_backup "quarterly" "$force"
-    quarterly_status=$?
-    [ $quarterly_status -ne 0 ] && status=1
+    run_backup "quarterly" "$force" || status=1
 fi
 
-# Exit with appropriate status code
+log_info "=== Backup run finished (exit: $status) ==="
 exit $status

@@ -7,9 +7,11 @@
     <key>ProgramArguments</key>
     <array>
         <string>/bin/bash</string>
-        <string>-c</string>
-        <string>/path/to/backup-system/bin/backup-runner.sh --type monthly</string>
+        <string>/path/to/backup-system/bin/backup-runner.sh</string>
+        <string>--type</string>
+        <string>monthly</string>
     </array>
+    <!-- Run on the 1st of every month at 2:00 AM -->
     <key>StartCalendarInterval</key>
     <dict>
         <key>Day</key>
@@ -19,16 +21,17 @@
         <key>Minute</key>
         <integer>0</integer>
     </dict>
+    <!-- LaunchD stdout/stderr: separate from per-source rclone logs in logs/{source-name}/ -->
     <key>StandardErrorPath</key>
-    <string>/path/to/backup-system/logs/monthly-launchd-error.log</string>
+    <string>/path/to/backup-system/logs/monthly-launchd.log</string>
     <key>StandardOutPath</key>
-    <string>/path/to/backup-system/logs/monthly-launchd-output.log</string>
+    <string>/path/to/backup-system/logs/monthly-launchd.log</string>
     <key>RunAtLoad</key>
     <false/>
     <key>EnvironmentVariables</key>
     <dict>
         <key>PATH</key>
-        <string>/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+        <string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
     </dict>
 </dict>
 </plist>

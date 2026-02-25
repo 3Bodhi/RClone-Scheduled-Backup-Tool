@@ -7,62 +7,49 @@
     <key>ProgramArguments</key>
     <array>
         <string>/bin/bash</string>
-        <string>-c</string>
-        <string>/path/to/backup-system/bin/backup-runner.sh --type quarterly</string>
+        <string>/path/to/backup-system/bin/backup-runner.sh</string>
+        <string>--type</string>
+        <string>quarterly</string>
     </array>
+    <!-- Run at 3:00 AM on the 1st of Jan, Apr, Jul, Oct -->
     <key>StartCalendarInterval</key>
     <array>
         <dict>
-            <key>Month</key>
-            <integer>1</integer>
-            <key>Day</key>
-            <integer>1</integer>
-            <key>Hour</key>
-            <integer>3</integer>
-            <key>Minute</key>
-            <integer>0</integer>
+            <key>Month</key><integer>1</integer>
+            <key>Day</key><integer>1</integer>
+            <key>Hour</key><integer>3</integer>
+            <key>Minute</key><integer>0</integer>
         </dict>
         <dict>
-            <key>Month</key>
-            <integer>4</integer>
-            <key>Day</key>
-            <integer>1</integer>
-            <key>Hour</key>
-            <integer>3</integer>
-            <key>Minute</key>
-            <integer>0</integer>
+            <key>Month</key><integer>4</integer>
+            <key>Day</key><integer>1</integer>
+            <key>Hour</key><integer>3</integer>
+            <key>Minute</key><integer>0</integer>
         </dict>
         <dict>
-            <key>Month</key>
-            <integer>7</integer>
-            <key>Day</key>
-            <integer>1</integer>
-            <key>Hour</key>
-            <integer>3</integer>
-            <key>Minute</key>
-            <integer>0</integer>
+            <key>Month</key><integer>7</integer>
+            <key>Day</key><integer>1</integer>
+            <key>Hour</key><integer>3</integer>
+            <key>Minute</key><integer>0</integer>
         </dict>
         <dict>
-            <key>Month</key>
-            <integer>10</integer>
-            <key>Day</key>
-            <integer>1</integer>
-            <key>Hour</key>
-            <integer>3</integer>
-            <key>Minute</key>
-            <integer>0</integer>
+            <key>Month</key><integer>10</integer>
+            <key>Day</key><integer>1</integer>
+            <key>Hour</key><integer>3</integer>
+            <key>Minute</key><integer>0</integer>
         </dict>
     </array>
+    <!-- LaunchD stdout/stderr: separate from per-source rclone logs in logs/{source-name}/ -->
     <key>StandardErrorPath</key>
-    <string>/path/to/backup-system/logs/quarterly-launchd-error.log</string>
+    <string>/path/to/backup-system/logs/quarterly-launchd.log</string>
     <key>StandardOutPath</key>
-    <string>/path/to/backup-system/logs/quarterly-launchd-output.log</string>
+    <string>/path/to/backup-system/logs/quarterly-launchd.log</string>
     <key>RunAtLoad</key>
     <false/>
     <key>EnvironmentVariables</key>
     <dict>
         <key>PATH</key>
-        <string>/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+        <string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
     </dict>
 </dict>
 </plist>

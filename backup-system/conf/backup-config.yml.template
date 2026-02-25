@@ -1,48 +1,66 @@
-# Network Share Configuration
-NETWORK_SHARE_URL: "smb://server/share"
-NETWORK_SHARE_PATH: "/Volumes/BackupShare"
-NETWORK_SHARE_USERNAME: "username"
-NETWORK_SHARE_PASSWORD: "password"
+# ============================================================
+# Backup Configuration Template
+# Copy to backup-config.yml and edit before running install.sh
+# ============================================================
 
-# Backup Configuration
-BACKUP_ROOT: "dropbox-backups"
-    # The name of the root folder of the backups at the destination.
-RCLONE_CONFIG: "../conf/rclone.conf"
-RCLONE_OPTIONS: "--progress --transfers 4 --checkers 8 --stats 1s"
+# Destination: an rclone remote pointing to your SMB/NFS/cloud target.
+# The remote must be configured in rclone.conf (run install.sh or rclone config).
+destination:
+  remote: "backup-smb"                    # rclone remote name from rclone.conf
+  path: "sharename/path/to/backup/root"   # path within the share, no leading slash
 
-# Backup Sources Configuration
-# Each source has:
-#  - name: Unique identifier for the backup source
-#  - remote: The rclone remote name (e.g., "dropbox:")
-#  - path: The path within the remote (empty for root)
-#  - shared: If the folders is a Dropbox Shared folder.
-#  - includes: List of specific folders/files to include (empty for everything)
-#  - excludes: List of patterns to exclude
-#  - frequency: When to back up this source (monthly, quarterly, both)
-BACKUP_SOURCES:
-  - name: "documents"
+# Subfolder created under destination.path to hold all backups.
+backup_root: "dropbox-backups"
+
+# Path to rclone.conf — relative paths are resolved from the backup-system/ root.
+rclone_config: "conf/rclone.conf"
+
+# Global rclone flags appended to every sync command.
+# Do not include values with spaces. Use individual flags separated by spaces.
+rclone_options: "--transfers 4 --checkers 8 --stats 60s --retries 3"
+
+# Directory for run logs and per-source rclone logs.
+# Relative paths are resolved from the backup-system/ root.
+log_dir: "logs"
+
+# Notification settings.
+notifications:
+  enabled: true
+  # List of active backends. Each backend must have a matching file at
+  # lib/notify/{backend}.sh. Currently available: macos
+  backends: ["macos"]
+
+# Set to true to enable debug log output and preserve rclone filter files after runs.
+debug: false
+
+# ============================================================
+# Backup Sources
+# Each entry defines one sync operation. Multiple entries with
+# the same name but different frequencies are allowed.
+#
+# Fields:
+#   name      - Human-readable label; used as the log subdirectory name.
+#   remote    - rclone remote for the source (e.g. "dropbox:").
+#   path      - Path within the source remote. Use a leading slash for absolute paths.
+#   includes  - If non-empty, only these paths are synced. Supports rclone filter syntax.
+#               A catch-all exclusion ("- **") is added automatically.
+#   excludes  - Paths to exclude. Applied after includes.
+#   frequency - monthly | quarterly | both
+# ============================================================
+backup_sources:
+  - name: "Example Quarterly Source"
     remote: "dropbox:"
-    path: "Documents"
-    shared: false
+    path: "/Shared Folder/All Members"
     includes: []
-    excludes: ["*.tmp", "temp/*"]
-    frequency: "both"
-
-  - name: "photos"
-    remote: "dropbox:"
-    path: "Photos"
-    shared: false
-    includes: ["2023/*", "2024/*"]
-    excludes: ["**/raw/*"]
+    excludes: []
     frequency: "quarterly"
 
-  - name: "projects"
+  - name: "Example Monthly Subset"
     remote: "dropbox:"
-    path: "Projects"
-    shared: true
-    includes: ["ActiveProjects/*", "references.txt"]
-    excludes: ["**/*.log"]
+    path: "/Shared Folder/Active Work"
+    includes:
+      - "/Active Studies/**"
+      - "/Data Resources/**"
+    excludes:
+      - "**/*.tmp"
     frequency: "monthly"
-
-# System Configuration
-DEBUG: 0

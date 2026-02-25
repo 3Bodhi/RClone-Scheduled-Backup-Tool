@@ -1,11 +1,10 @@
-# template files are allowed
+# template files are always allowed
 !*.template
-# Logs
+
+# Logs and temporary rclone filter files
 logs/
 *.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+*-filter.tmp
 
 # Runtime data and backup files
 *.pid
@@ -91,10 +90,6 @@ Thumbs.db
 *.bin
 *.dat
 *.dump
-
-# Temporary mount points
-/Volumes/*
-/mnt/*
 
 # Backup results and cache
 backup-system/cache/
