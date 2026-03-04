@@ -23,7 +23,7 @@ build_dest_path() {
             echo "${DEST_REMOTE}:${DEST_PATH}/${BACKUP_ROOT}/${year}/monthly/${month}/${source_name}"
             ;;
         quarterly)
-            echo "${DEST_REMOTE}:${DEST_PATH}/${BACKUP_ROOT}//${year}/quarterly/Q${quarter}/${source_name}"
+            echo "${DEST_REMOTE}:${DEST_PATH}/${BACKUP_ROOT}/${year}/quarterly/Q${quarter}/${source_name}"
             ;;
         *)
             log_error "build_dest_path: unknown type '$type'"

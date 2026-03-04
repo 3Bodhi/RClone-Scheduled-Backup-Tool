@@ -19,8 +19,9 @@ tmp/
 temp/
 
 # Configuration with sensitive data
-conf/backup-config*.yml
-conf/rclone.conf
+*/conf/backup-config.yml
+*/conf/backup-config copy.yml
+*/conf/rclone.conf
 **/credentials.json
 **/*.key
 **/*.pem
