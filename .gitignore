@@ -99,3 +99,4 @@ backup-system/results/
 # Allow LaunchD templates but ignore user-specific versions
 !conf/launchd/*.plist.template
 conf/launchd/*.plist
+backup-system/conf/launchd/*.plist
